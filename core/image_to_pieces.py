@@ -5,6 +5,16 @@ import json
 
 
 def text_to_json(text_images, verbose = False):
+    """
+    Convierte en estructura legible el texto de cada seccion del pdf
+
+    Parameters:
+        text_images (list): lista con el texto correspondiente a cada seccion del pdf
+        verbose (bool): parametro para indicar si se imprime en pantalla el json
+
+    Returns:
+        Json con la estructura de cada ronda, partidos y resultados    
+    """
     columns = []
     for i, text_image in enumerate(text_images):
         text = text_image.splitlines()
