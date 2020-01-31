@@ -25,8 +25,13 @@ En mi caso, utilizando conda
 ```bash
 conda install --name myenv -c conda-forge pytesseract
 ```
-## Uso
+## Uso pytesseract
 ```python
 import pytesseract
 text_from_image = pytesseract.image_to_string(some_image)
+```
+## Uso converter
+converter.py [siglas_de_idioma] [verbose(1/0)] [pdf_path]
+```bash
+python converter.py eng 1 ./docs/mds.pdf
 ```
