@@ -4,43 +4,40 @@ from io import BytesIO
 import json
 
 
-def text_to_json(text_images):
+def text_to_json(text_images, verbose = False):
     columns = []
     for i, text_image in enumerate(text_images):
         text = text_image.splitlines()
-        text = list(filter(('').__ne__, text))
-        text = list(filter((' ').__ne__, text))
-
-        print('IMPRESION', text)
+        text = list(filter(str.strip, text))
+        text = list(filter((']').__ne__, text))
+        text = list(filter(('[').__ne__, text))    
         match_counter = 1
         rows = []
+        temp_row = {}
         for j in range(0,len(text),2):
-            
-            
-            if i > 0 and i != len(text_image)-1:
-                rows.clear()
-                if j<len(text)-2:
-                    rows.append({f'match-{match_counter}':f'{text[j]} vs {text[j+2]}'})
+            if i > 0 and i != len(text_images)-1:
+                if j < len(text) / 2 - 1:
+                    rows.append({f'match-{match_counter}':f'{text[j*2]} vs {text[j*2+2]}'})
                 temp_dict = {'winner':text[j],'results':text[j+1]}
-                print(temp_dict)
-                #print(columns[i-1])
-                print(match_counter)
                 columns[i-1][f'round-{i}'][match_counter-1].update(temp_dict)
-            if i == len(text_image)-1:
-                rows.append({f'match-{match_counter}':f'{text[j*2]} vs {text[j*2+1]}'})
+            if i == len(text_images)-1:
+                if j == 0:
+                    temp_row = {f'match-1':f'{text[j]} vs {text[j+4]}'}
                 if j < 3:
                     temp_dict = {'winner':text[j*2],'results':text[j*2+1]}    
                     columns[i-1][f'round-{i}'][match_counter-1].update(temp_dict)
                 if j > 3:
                     temp_dict = {'winner':text[j-2],'results':text[j-1]}   
-                    columns[i][f'round-{i}'][match_counter-1].update(temp_dict)
-            else:
+                    temp_row.update(temp_dict)
+                    rows.append(temp_row)
+            elif i == 0:
                 rows.append({f'match-{match_counter}':f'{text[j]} vs {text[j+1]}'})
             match_counter = match_counter + 1
-
         columns.append({f'round-{i+1}': rows} )
     output = json.dumps(columns, indent=4)
-    print(output)
+    if verbose:
+        print(output)
+    return output
 
 
 
